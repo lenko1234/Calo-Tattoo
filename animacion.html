@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calo Tattoo - Prueba Visual</title>
+    <style>
+        /* --- FONDO CLARO PARA ASEGURAR VISIBILIDAD --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #eecfa1; /* Piel clara (Beige) */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Ruido para textura */
+        .skin-texture {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0.5;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.4'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        /* --- CONTENEDOR --- */
+        .tattoo-stage {
+            position: relative;
+            width: 80%;
+            max-width: 600px;
+            height: 300px;
+            /* Borde rojo solo para depurar y saber dónde está la caja (borrar luego) */
+            border: 1px dashed rgba(255, 0, 0, 0.3); 
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        /* --- TRAZOS --- */
+        .path-stencil {
+            fill: none;
+            stroke: #6a0dad; /* Violeta fuerte */
+            stroke-width: 2;
+            opacity: 0.3;
+        }
+
+        .path-ink {
+            fill: none;
+            stroke: #000000; /* Negro puro */
+            stroke-width: 5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.2));
+        }
+
+        /* --- MÁQUINA --- */
+        .machine-container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 0; height: 0;
+            z-index: 50;
+        }
+
+        /* Si tienes la imagen aguja.png, se verá esto */
+        .needle-image {
+            width: 50px;
+            position: absolute;
+            bottom: 0; left: -25px;
+            transform-origin: 50% 100%;
+        }
+
+        /* SI NO TIENES LA IMAGEN, se verá este triángulo rojo */
+        .needle-fallback {
+            width: 0; 
+            height: 0; 
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 40px solid #cc0000; /* Rojo visible */
+            position: absolute;
+            bottom: 0; 
+            left: -10px;
+            filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.4));
+        }
+
+        /* Animación de vibración */
+        .buzzing {
+            animation: buzz 0.05s infinite linear;
+        }
+        @keyframes buzz {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-2px) rotate(2deg); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="skin-texture"></div>
+
+    <div class="tattoo-stage">
+        <svg viewBox="0 0 400 200">
+            <path class="path-stencil" d="M50,150 C40,100 100,100 80,150 C60,180 120,180 140,150 L140,120 C130,120 120,150 140,150 C160,150 160,120 160,100 L160,160 M180,160 L180,100 L180,150 C180,170 200,160 210,150 C200,150 190,150 210,150 C230,150 230,120 210,120 C190,120 190,150 210,150" />
+            
+            <path class="path-ink" d="M50,150 C40,100 100,100 80,150 C60,180 120,180 140,150 L140,120 C130,120 120,150 140,150 C160,150 160,120 160,100 L160,160 M180,160 L180,100 L180,150 C180,170 200,160 210,150 C200,150 190,150 210,150 C230,150 230,120 210,120 C190,120 190,150 210,150" />
+        </svg>
+
+        <div class="machine-container buzzing">
+            <img src="aguja.png" class="needle-image" onerror="this.style.display='none'">
+            <div class="needle-fallback"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. TINTA
+            anime({
+                targets: '.path-ink',
+                strokeDashoffset: [anime.setDashoffset, 0],
+                easing: 'linear',
+                duration: 5000,
+                delay: 500
+            });
+
+            // 2. MÁQUINA
+            const path = anime.path('.path-ink');
+            
+            anime({
+                targets: '.machine-container',
+                translateX: path('x'),
+                translateY: path('y'),
+                rotate: path('angle'),
+                easing: 'linear',
+                duration: 5000,
+                delay: 500,
+                complete: function() {
+                    // Levantar máquina al terminar
+                    anime({
+                        targets: '.machine-container',
+                        opacity: 0,
+                        duration: 500
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -574,6 +574,29 @@ footer {
     color: var(--accent-color);
 }
 
+.noxsites-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 20px;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: var(--transition);
+    opacity: 0.8;
+}
+
+.noxsites-btn:hover {
+    background-color: var(--accent-color);
+    color: var(--black);
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
 /* Animations */
 .fade-in-up {
     opacity: 0;
