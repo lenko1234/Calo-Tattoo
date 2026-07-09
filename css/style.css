@@ -370,12 +370,18 @@ img {
     border: 1px solid var(--border-color);
     text-align: center;
     transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
 }
 
 .service-card:hover {
     transform: translateY(-10px);
     border-color: var(--accent-color);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    color: var(--white); /* Ensure text remains bright on hover */
 }
 
 .icon-box {
@@ -405,6 +411,38 @@ img {
 .service-card p {
     color: var(--text-muted);
     font-size: 0.9rem;
+    flex-grow: 1;
+}
+
+/* Card Tags (Glassmorphic) */
+.tag-catalog,
+.tag-instagram {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 1.5rem;
+    padding: 0.4rem 1rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: var(--transition);
+}
+
+.tag-instagram i {
+    font-size: 0.9rem;
+}
+
+.service-card:hover .tag-catalog,
+.service-card:hover .tag-instagram {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    background: rgba(212, 175, 55, 0.05);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.15);
 }
 
 /* Gallery Section */
